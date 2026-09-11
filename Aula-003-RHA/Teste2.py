@@ -9,18 +9,23 @@ A = [[random.random() for _ in range(N)] for _ in range(N)]
 B = [[random.random() for _ in range(N)] for _ in range(N)]
 C = [[0]*N for _ in range(N)]
 MatrizC = []
+if rank == 0:
+    inicio = time.time()
+    A = [[random.random() for _ in range(N)] for _ in range(N)]
+    B = [[random.random() for _ in range(N)] for _ in range(N)]
 dataA = comm.bcast(A,root = 0)
 dataB = comm.bcast(B,root = 0)
+
 def calcular(inicio, fim):
     for i in range(inicio, fim):
         for j in range(N):
             for k in range(N):
                 C[i][j] += A[i][k] * B[k][j]
-inicio = time.time()
+
 linhas = N // size
 
 if rank == 0:
-    inicio = time.time()
+   
     comm.gather(MatrizC,root = 0) 
     fim = time.time()
     print(f"Tempo : {(fim - inicio) * 1000:.2f} ms")
